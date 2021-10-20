@@ -53,10 +53,11 @@ function getTokenPrice(
     let mantissaDecimalFactor = 18 - underlyingDecimals + 18
     let bdFactor = exponentToBigDecimal(mantissaDecimalFactor)
     let oracle2 = PriceOracle2.bind(oracleAddress)
-    underlyingPrice = oracle2
-      .getUnderlyingPrice(eventAddress)
-      .toBigDecimal()
-      .div(bdFactor)
+    let tryPrice = oracle2.try_getUnderlyingPrice(eventAddress)
+
+    underlyingPrice = tryPrice.reverted
+      ? zeroBD
+      : tryPrice.value.toBigDecimal().div(bdFactor)
 
     /* PriceOracle(1) is used (only for the first ~100 blocks of Comptroller. Annoying but we must
      * handle this. We use it for more than 100 blocks, see reason at top of if statement
@@ -89,10 +90,11 @@ function getUSDCpriceETH(blockNumber: i32): BigDecimal {
     let oracle2 = PriceOracle2.bind(oracleAddress)
     let mantissaDecimalFactorUSDC = 18 - 6 + 18
     let bdFactorUSDC = exponentToBigDecimal(mantissaDecimalFactorUSDC)
-    usdPrice = oracle2
-      .getUnderlyingPrice(Address.fromString(cUSDCAddress))
-      .toBigDecimal()
-      .div(bdFactorUSDC)
+    let tryPrice = oracle2.try_getUnderlyingPrice(Address.fromString(cUSDCAddress))
+
+    usdPrice = tryPrice.reverted
+      ? zeroBD
+      : tryPrice.value.toBigDecimal().div(bdFactorUSDC)
   } else {
     let oracle1 = PriceOracle.bind(priceOracle1Address)
     usdPrice = oracle1
@@ -168,10 +170,12 @@ function getETHinUSD(blockNumber: i32): BigDecimal {
   let comptroller = Comptroller.load('1')
   let oracleAddress = comptroller.priceOracle as Address
   let oracle = PriceOracle2.bind(oracleAddress)
-  let ethPriceInUSD = oracle
-    .getUnderlyingPrice(Address.fromString(cETHAddress))
-    .toBigDecimal()
-    .div(mantissaFactorBD)
+  let tryPrice = oracle.try_getUnderlyingPrice(Address.fromString(cETHAddress))
+
+  let ethPriceInUSD = tryPrice.reverted
+    ? zeroBD
+    : tryPrice.value.toBigDecimal().div(mantissaFactorBD)
+
   return ethPriceInUSD
 }
 
