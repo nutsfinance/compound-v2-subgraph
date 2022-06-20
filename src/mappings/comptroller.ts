@@ -15,9 +15,12 @@ import { CToken } from '../types/templates'
 import { Market, Comptroller, Account } from '../types/schema'
 import { mantissaFactorBD, updateCommonCTokenStats, createAccount } from './helpers'
 import { createMarket } from './markets'
+import { log } from '@graphprotocol/graph-ts'
 
 export function handleMarketListed(event: MarketListed): void {
   // Dynamically index all new listed tokens
+  log.info('handleMarketListed: {}', [event.params.cToken.toHexString()])
+
   CToken.create(event.params.cToken)
   // Create the market for this token, since it's now been listed.
   let market = createMarket(event.params.cToken.toHexString())
@@ -102,11 +105,11 @@ export function handleNewLiquidationIncentive(event: NewLiquidationIncentive): v
   comptroller.save()
 }
 
-export function handleNewMaxAssets(event: NewMaxAssets): void {
-  let comptroller = Comptroller.load('1')
-  comptroller.maxAssets = event.params.newMaxAssets
-  comptroller.save()
-}
+// export function handleNewMaxAssets(event: NewMaxAssets): void {
+//   let comptroller = Comptroller.load('1')
+//   comptroller.maxAssets = event.params.newMaxAssets
+//   comptroller.save()
+// }
 
 export function handleNewPriceOracle(event: NewPriceOracle): void {
   let comptroller = Comptroller.load('1')

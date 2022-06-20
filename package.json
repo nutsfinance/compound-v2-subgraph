@@ -9,7 +9,8 @@
     "create-local": "graph create graphprotocol/compound-v2 --node http://127.0.0.1:8020",
     "deploy-local": "graph deploy graphprotocol/compound-v2 --debug --ipfs http://localhost:5001 --node http://127.0.0.1:8020/",
     "deploy": "graph deploy graphprotocol/compound-v2 --debug --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
-    "deploy-staging": "graph deploy --debug --ipfs https://api.staging.thegraph.com/ipfs/ --node https://api.staging.thegraph.com/deploy/ davekaj/compoundv2",
+    "create-staging": "graph create test/compound-v2 --node https://tc7-graphql.aca-dev.network",
+    "deploy-staging": "graph deploy --debug --node https://tc7-graphql.aca-dev.network test/compoundv2",
     "prettier": "./node_modules/.bin/prettier —-write '**/*.ts'"
   },
   "devDependencies": {

@@ -106,38 +106,26 @@ function getUSDCpriceETH(blockNumber: i32): BigDecimal {
 }
 
 export function createMarket(marketAddress: string): Market {
+  log.info('createMarket: {}', [marketAddress])
   let market: Market
   let contract = CToken.bind(Address.fromString(marketAddress))
+  log.info('contract.name(): {}', [contract.name()])
 
-  // It is CETH, which has a slightly different interface
-  if (marketAddress == cETHAddress) {
-    market = new Market(marketAddress)
-    market.underlyingAddress = Address.fromString(
-      '0x0000000000000000000000000000000000000000',
-    )
-    market.underlyingDecimals = 18
-    market.underlyingPrice = BigDecimal.fromString('1')
-    market.underlyingName = 'Ether'
-    market.underlyingSymbol = 'ETH'
-    market.underlyingPriceUSD = zeroBD
-    // It is all other CERC20 contracts
+  market = new Market(marketAddress)
+  market.underlyingAddress = contract.underlying()
+  let underlyingContract = ERC20.bind(market.underlyingAddress as Address)
+  market.underlyingDecimals = underlyingContract.decimals()
+  if (market.underlyingAddress.toHexString() != daiAddress) {
+    market.underlyingName = underlyingContract.name()
+    market.underlyingSymbol = underlyingContract.symbol()
   } else {
-    market = new Market(marketAddress)
-    market.underlyingAddress = contract.underlying()
-    let underlyingContract = ERC20.bind(market.underlyingAddress as Address)
-    market.underlyingDecimals = underlyingContract.decimals()
-    if (market.underlyingAddress.toHexString() != daiAddress) {
-      market.underlyingName = underlyingContract.name()
-      market.underlyingSymbol = underlyingContract.symbol()
-    } else {
-      market.underlyingName = 'Dai Stablecoin v1.0 (DAI)'
-      market.underlyingSymbol = 'DAI'
-    }
-    market.underlyingPriceUSD = zeroBD
-    market.underlyingPrice = zeroBD
-    if (marketAddress == cUSDCAddress) {
-      market.underlyingPriceUSD = BigDecimal.fromString('1')
-    }
+    market.underlyingName = 'Dai Stablecoin v1.0 (DAI)'
+    market.underlyingSymbol = 'DAI'
+  }
+  market.underlyingPriceUSD = zeroBD
+  market.underlyingPrice = zeroBD
+  if (marketAddress == cUSDCAddress) {
+    market.underlyingPriceUSD = BigDecimal.fromString('1')
   }
 
   let interestRateModelAddress = contract.try_interestRateModel()

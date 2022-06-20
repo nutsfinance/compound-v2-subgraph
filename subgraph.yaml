@@ -6,11 +6,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: Comptroller
-    network: mainnet
+    network: acala
     source:
-      address: "0x3d9819210A31b4961b30EF54bE2aeD79B9c9Cd3B"
+      address: "0x217b896620AfF6518B9862160606695607A63442"
       abi: Comptroller
-      startBlock: 7700000
+      startBlock: 0
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -43,14 +43,14 @@ dataSources:
           handler: handleNewCollateralFactor
         - event: NewLiquidationIncentive(uint256,uint256)
           handler: handleNewLiquidationIncentive
-        - event: NewMaxAssets(uint256,uint256)
-          handler: handleNewMaxAssets
+        # - event: NewMaxAssets(uint256,uint256)
+        #   handler: handleNewMaxAssets
         - event: NewPriceOracle(address,address)
           handler: handleNewPriceOracle
 templates:
   - name: CToken
     kind: ethereum/contract
-    network: mainnet
+    network: acala
     source:
       abi: CToken
     mapping:
