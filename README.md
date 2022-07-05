@@ -26,12 +26,15 @@ Please contact Syed for help.
 ### start local graph-node
 
 ```
-# follow https://evmdocs.acala.network/network/network-setup/local-development-network
+# follow https://github.com/nutsfinance/pike-core/blob/main/README.md#start-mandala-node-and-rpc-adapter
 # make sure the following is up:
 # 1. local mandala node
 # 2. eth-rpc-adapter
 # 3. local acala's subquery node
 # check with Syed@Acala if anything is not working
+
+# then run the following
+
 docker compose up
 ```
 
