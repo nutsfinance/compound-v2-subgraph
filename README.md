@@ -1,19 +1,45 @@
 # Compound-V2-subgraph
 
-[Compound](https://compound.finance/) is an open-source protocol for algorithmic, efficient Money Markets on the Ethereum blockchain. This Subgraph ingests the V2 contracts of the protocol.
+### Concept
 
-## Networks and Performance
+1. Subquery = the graph on polkadot
+2. Acala has a subgraph on Subquery for us to grab the on-chain activities.
+3. The subgraph here is forked from theGraph's official compound subgraph.
+4. To make this subgraph to work for pike, we have to host a graph node ourselves, and deploy the subgraph to our hosted graph node
 
-This subgraph can be found on The Graph Hosted Service at https://thegraph.com/explorer/subgraph/graphprotocol/compound-v2.
+### Acala's technical support
 
-You can also run this subgraph locally, if you wish. Instructions for that can be found in [The Graph Documentation](https://thegraph.com/docs/quick-start).
+Please contact Syed@Acala
 
-### ABI
+### Future Recommendation
 
-The ABI used is `ctoken.json`. It is a stripped down version of the full abi provided by compound, that satisfies the calls we need to make for both cETH and cERC20 contracts. This way we can use 1 ABI file, and one mapping for cETH and cERC20.
+When starting this repo I followed Acala's EVM+ docs, https://evmdocs.acala.network/tutorials/subgraph, and tried to get the compound subgraph running.
+Later I found out that, in order to get the subgraph running, We will need to deploy our own graph node, which is cumbersome.
+I suggest in the future, instead of hosting our graph node and index the evm event logs through acala's EVM rpc, we can rewrite compound's subgraph on subquery, utilizing it's substract EVM support. See https://university.subquery.network/build/substrate-evm.html
 
-## Getting started with querying
+### unfinished task
 
-Below are a few ways to show how to query the Compound V2 Subgraph for data. The queries show most of the information that is queryable, but there are many other filtering options that can be used, just check out the [querying api](https://github.com/graphprotocol/graph-node/blob/master/docs/graphql-api.md).
+Pike's contracts has been deployed to mandala Pub Dev network, I tried starting a local graph node and deploy the subgraph to local to index mandala Pub Dev network, but it does not work.
 
-You can also see the saved queries on the hosted service for examples.
+Please contact Syed for help.
+
+### start local graph-node
+
+```
+# follow https://evmdocs.acala.network/network/network-setup/local-development-network
+# make sure the following is up:
+# 1. local mandala node
+# 2. eth-rpc-adapter
+# 3. local acala's subquery node
+# check with Syed@Acala if anything is not working
+docker compose up
+```
+
+### create and deploy subgraph
+
+```
+# add back comptroller address to subgraph.yaml line 12
+yarn
+yarn create-local
+yarn deploy-local
+```
